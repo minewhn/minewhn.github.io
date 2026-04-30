@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>施工中</title>
+    <style>
+        /* 清除默认边距，设置深色背景 */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #1e1e1e;
+            color: #ffffff;
+            /* 使用系统默认字体，避免加载外部字体导致在国内访问缓慢 */
+            font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        /* 居中容器 */
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* 添加轻微的渐显动画，提升质感 */
+            animation: fadeIn 1.5s ease-in-out;
+            padding: 20px;
+        }
+
+        /* 图标样式 */
+        .icon {
+            margin-bottom: 24px;
+        }
+
+        /* 主标题样式 */
+        .title {
+            font-size: 2.4rem;
+            font-weight: bold;
+            letter-spacing: 4px;
+            margin: 0 0 24px 0;
+            color: #eeeeee;
+        }
+
+        /* 副标题（灰色斜体）样式 */
+        .subtitle {
+            font-size: 1.1rem;
+            color: #888888;
+            font-style: italic;
+            line-height: 2.2;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+
+        /* 渐显动画 */
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 使用内联 SVG 绘制黄色三角形施工图标，不需要加载外部图片 -->
+        <div class="icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 24 24">
+                <!-- 黄色圆角三角形背景 -->
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" fill="#F5A623"/>
+                <!-- 中间的感叹号（颜色与网页深色背景一致，形成镂空效果） -->
+                <path d="M11 9h2v5h-2zm0 7h2v2h-2z" fill="#1e1e1e"/>
+            </svg>
+        </div>
+        
+        <h1 class="title">施工中</h1>
+        
+        <p class="subtitle">
+            感谢你发现这个网站，<br>
+        </p>
+    </div>
+</body>
+</html>
