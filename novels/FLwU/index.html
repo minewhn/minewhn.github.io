@@ -1,34 +1,700 @@
-
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>寻找生命的你和我</title>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 100%;
-			height:1200;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-        h1, h2, h3, h4, h5, h6 { margin-top: 1.5rem; margin-bottom: 1rem; }
-        pre { background: #f6f8fa; padding: 1rem; border-radius: 6px; overflow-x: auto; }
-        code { background: #f6f8fa; padding: 0.2rem 0.4rem; border-radius: 3px; }
-        blockquote { border-left: 4px solid #dfe2e5; padding-left: 1rem; margin: 1rem 0; color: #6a737d; }
-        table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
-        th, td { border: 1px solid #dfe2e5; padding: 0.5rem; text-align: left; }
-        th { background: #f6f8fa; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>小说在线阅读</title>
+<style>
+  :root {
+    --bg: #faf9f7;
+    --surface: #ffffff;
+    --text: #1f2328;
+    --muted: #6a737d;
+    --border: #e1e4e8;
+    --accent: #2f81f7;
+    --accent-soft: #ddf4ff;
+    --code-bg: #f6f8fa;
+    --blockquote-border: #d0d7de;
+    --shadow: 0 1px 3px rgba(0,0,0,.08);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --border: #30363d;
+      --accent: #58a6ff;
+      --accent-soft: #1f2d3d;
+      --code-bg: #1f242e;
+      --blockquote-border: #3d444d;
+      --shadow: 0 1px 3px rgba(0,0,0,.4);
+    }
+  }
+
+  [data-theme="dark"] {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --border: #30363d;
+    --accent: #58a6ff;
+    --accent-soft: #1f2d3d;
+    --code-bg: #1f242e;
+    --blockquote-border: #3d444d;
+    --shadow: 0 1px 3px rgba(0,0,0,.4);
+  }
+
+  [data-theme="light"] {
+    --bg: #faf9f7;
+    --surface: #ffffff;
+    --text: #1f2328;
+    --muted: #6a737d;
+    --border: #e1e4e8;
+    --accent: #2f81f7;
+    --accent-soft: #ddf4ff;
+    --code-bg: #f6f8fa;
+    --blockquote-border: #d0d7de;
+    --shadow: 0 1px 3px rgba(0,0,0,.08);
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    min-height: 100vh;
+    transition: background-color .2s ease, color .2s ease;
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    height: 56px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow);
+  }
+
+  .brand {
+    font-size: 18px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .theme-btn {
+    appearance: none;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    border-radius: 8px;
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .15s, border-color .15s;
+  }
+
+  .theme-btn:hover {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  .layout {
+    display: flex;
+    max-width: 1200px;
+    margin: 0 auto;
+    min-height: calc(100vh - 56px);
+  }
+
+  .sidebar {
+    width: 260px;
+    flex: 0 0 260px;
+    border-right: 1px solid var(--border);
+    background: var(--surface);
+    padding: 16px 0;
+    max-height: calc(100vh - 56px);
+    position: sticky;
+    top: 56px;
+    overflow-y: auto;
+  }
+
+  .sidebar-header {
+    padding: 0 20px 12px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  .chapter-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .chapter-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 10px 20px;
+    border: none;
+    background: transparent;
+    color: var(--text);
+    font-size: 14px;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+    line-height: 1.4;
+    transition: background .15s, border-color .15s;
+  }
+
+  .chapter-item:hover {
+    background: var(--accent-soft);
+  }
+
+  .chapter-item.active {
+    background: var(--accent-soft);
+    border-left-color: var(--accent);
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .chapter-num {
+    color: var(--muted);
+    font-size: 12px;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .main {
+    flex: 1;
+    min-width: 0;
+    padding: 32px 40px 60px;
+  }
+
+  .reader {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .chapter-title {
+    font-size: 28px;
+    line-height: 1.3;
+    margin: 0 0 8px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .chapter-file {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 28px;
+  }
+
+  .markdown-body h1,
+  .markdown-body h2,
+  .markdown-body h3,
+  .markdown-body h4,
+  .markdown-body h5,
+  .markdown-body h6 {
+    line-height: 1.35;
+    margin: 1.6em 0 .6em;
+  }
+
+  .markdown-body h1 { font-size: 1.8em; border-bottom: 1px solid var(--border); padding-bottom: .3em; }
+  .markdown-body h2 { font-size: 1.5em; border-bottom: 1px solid var(--border); padding-bottom: .3em; }
+  .markdown-body h3 { font-size: 1.25em; }
+  .markdown-body h4 { font-size: 1.1em; }
+  .markdown-body p { margin: .9em 0; }
+  .markdown-body ul, .markdown-body ol { padding-left: 1.6em; margin: .8em 0; }
+  .markdown-body li { margin: .3em 0; }
+  .markdown-body blockquote {
+    margin: 1em 0;
+    padding: .2em 1em;
+    border-left: 4px solid var(--blockquote-border);
+    color: var(--muted);
+    background: var(--accent-soft);
+    border-radius: 0 6px 6px 0;
+  }
+  .markdown-body pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    line-height: 1.5;
+  }
+  .markdown-body code {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: .1em .35em;
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    font-size: .9em;
+  }
+  .markdown-body pre code {
+    background: transparent;
+    border: none;
+    padding: 0;
+    font-size: .88em;
+  }
+  .markdown-body hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2em 0;
+  }
+  .markdown-body img {
+    max-width: 100%;
+    border-radius: 6px;
+  }
+
+  .status {
+    color: var(--muted);
+    text-align: center;
+    padding: 80px 20px;
+  }
+
+  .error-box {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px 24px;
+    border: 1px solid var(--border);
+    border-left: 4px solid #d1242f;
+    background: var(--surface);
+    border-radius: 8px;
+    color: var(--text);
+    white-space: pre-line;
+  }
+
+  @media (max-width: 760px) {
+    .layout {
+      flex-direction: column;
+    }
+    .sidebar {
+      width: 100%;
+      flex: none;
+      max-height: none;
+      position: static;
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+      padding: 8px 0;
+    }
+    .chapter-list {
+      display: flex;
+      gap: 4px;
+      padding: 0 12px;
+    }
+    .chapter-list li {
+      flex: 0 0 auto;
+    }
+    .chapter-item {
+      flex: 0 0 auto;
+      width: auto;
+      border-left: none;
+      border-bottom: 3px solid transparent;
+      padding: 8px 14px;
+      border-radius: 8px;
+    }
+    .chapter-item.active {
+      border-left: none;
+      border-bottom-color: var(--accent);
+    }
+    .chapter-num {
+      display: none;
+    }
+    .main {
+      padding: 24px 18px 40px;
+    }
+  }
+</style>
 </head>
 <body>
-<h2 id="h2-u5BFBu627Eu751Fu547Du7684u4F60u548Cu6211"><a name="寻找生命的你和我" class="reference-link"></a><span class="header-link octicon octicon-link"></span>寻找生命的你和我</h2><h3 id="h3-1"><a name="1" class="reference-link"></a><span class="header-link octicon octicon-link"></span>1</h3><p>“第37名，云云，”<br>坐在教室第二排中间，从开始上课便一直低着头的女生，身体突然间抽动了一下。<br>“云云你怎么开学来了排名就一直掉啊，还没恢复好状态吗？”老师说这句话时语气和刚才一样平和，却让我这么个无关的人都感到莫大的压力。<br>“寒假之前就说过多少次了，现在是打基础的时候，现在你松下来……“<br>”不仅是她，还有很多同学，放假回来明显就不在状态，隔壁班跟我们就差一点点了，以前都是差一截的。”说实话这前半句还像是就事论事，后半句说了就感觉好像她是因为怕丢脸一样。我在心里偷偷笑着，又赶快注意检查一下有没有笑到脸上去。<br>“第38名，雨雨。39名……”<br>啊果然我没什么好说的。从入学到现在基本都是这个排名，虽然也不算很好看的排名，但好像一直能保持住就挺厉害的了，前十名的人都做不到的。这么想着我好像还有点骄傲感，拿出来卷子假装在改错，脑袋搭上胳膊去眯起了眼。<br>“行了，这就是这次成绩，都出门去按成绩排好队挑座位了。”<br>我抬起脑袋，刘海好像有点睡乱了，懒得管它。我是多少名来着，哦对在云云后面，去站她后面就行。<br>初三时候常常想长头发好麻烦，不仅洗头麻烦，每天早上起来乱蓬蓬的就要打理好半天，中考结束几天后我终于下定决心去剪了个短发，现在看来真是个好决定，刘海乱了就乱着，反正就算我也和她们一样长发飘飘打理齐整桃花运也跟我没关系，我也没兴趣。<br>终于到我了，进教室我径直朝着我的老位置——中间排靠窗的座位走去，走过讲台后我向那里一看，云云正坐在那里。我一时想生气，那个位置我都坐了两个月了怎么还会有人跟我抢，刚想去找她讨座位，话到嘴边又发现自己好像确实没理。我不满意地叹了口气，默默坐到了她旁边靠过道的位置生闷气，外人看了说不定会笑我像个小孩子被收了玩具一样，但……算了确实像。</p>
-<hr>
-<p>会考成这样其实我并不意外，进门选座发现我预先想好的几个前排的地方都被占了，只好选了剩下的里面尽量靠前的，其实我并不喜欢靠窗的座位，上课总要斜着看很不舒服。<br>我边转着笔边想着座位的事，忽然笔就打着旋从手上飞了出去，掉到了她的凳子底下。她好像愣了极短的一下，又若无其事的接着写作业。<br>新的同桌我之前没怎么打过交道，但是她坐到我旁边的时候散发着生人勿近的冷淡气息，但毕竟要和她坐一个月，总不能当一个月陌生人，所以我还是先开口了。<br>“呃，你好？”<br>“嗯，怎么了。”她稍稍瞥过来一个眼角，还没等我看见她的眼球就又瞥了回去。<br>果然好冷淡……难道在生我的气？实在想不到我哪里惹她不高兴了。唉，好麻烦，还是少跟她说话了。<br>“呃，没事。”我弯下腰伸手自己拿回了笔。<br>敬而远之，敬而远之。</p>
-<p>晚自习，老师迟迟没有来，旁边的雨雨左右看看，从抽屉深处拿出无线耳机，掏出左边耳朵的一只，熟练地拨开左边的头发戴上，再把头发盖回去。意识到我好像一直在看她，她像是无意识地白了我一眼，好像在说“怎么，这你也要管？”我没理她，又低下头写作业。<br>课间，她拿着水杯站起身，我不知怎么突然好奇她听的什么歌，自习的时候一边听一边轻轻晃着身子，相当沉浸的样子。等她走出教室去打水，我偷偷摸出她的耳机，靠近耳朵听了一下，莫名觉得耳熟，就戴上。居然就是我上次放假时刚认识的乐队。我不是喜欢单曲循环的人，但第一次听到他们的歌，我就循环了一整天，第二天就把他们其他的歌全听了一遍。我本以为这是个很冷门的乐队，看来好像不是这样？<br>下次放假还遥遥无期，能在这里再听一下真是莫大的幸福。<br>“你……在干嘛？”<br>我猛地抬起头，发现雨雨正站在我面前，不是刚刚冷淡的脸色，而是微微泛着红。<br>“啊，啊对不起……我……”我慌到语无伦次，赶快摘下耳机放回原处，紧张地缓缓抬起头看她的表情，和刚才一样。<br>她没再说什么，只是坐回座位又拿起笔。<br>那节自习我一直心神不宁，她会不会更讨厌我了？我是不是该道个歉？我不时朝她的方向瞟过去，她只是转着笔，脸色依旧微微泛红，难道她的脸本来就是这样？<br>我终于鼓起勇气向她转过头，“呃，那个……”<br>我刚才想说什么来着……<br>她也终于偏过头第一次正眼看我。<br>“没关系……”<br>她说没关系，那是原谅我了吧？<br>“啊谢谢，嗯……”<br>“我也喜欢这首歌，嘿嘿，你也好有品啊。”我试探地友好了一下，尴尬地笑笑，没想到她突然睁大了眼睛：<br>“诶？真的么，我，我很喜欢这首。”<br>不知道是我太慌张的错觉还是真的是这样，感觉她的脸变得更红了，像是小时候经常玩的把手指按在手机的手电筒上时透出指尖的红色。<br>“那……”她的眼神向地上飘去，我才发觉她乱乱的刘海下有着好长的睫毛，水色的瞳孔像玻璃珠，明明很好看却总是藏在刘海下。直到她再次开口我都没有从她的眼睛里回过神来。<br>“给你。”她把左耳上的耳机摘下向我递过来，她抬头时正对上我的视线不到十分之一秒，又朝右边稍偏过去，好像是在看窗外的月亮吧。我接过耳机，她很快地缩回手，打开耳机盒拿出另一只，又撩起侧发反着戴在左耳上。<br>“嘿嘿……谢谢你。”<br>“你刚才那样好可爱啊——”我又忍不住加上一句。<br>她突然触电似的直起身子转过头，眼神忽闪着，睫毛好像扇出了微风：“你说什……么？”<br>那天晚上我作业没写多少，歌听了很多，眼前不时浮起她撩起头发时的可爱样子。</p>
+<header class="topbar">
+  <div class="brand">寻找生命的你和我</div>
+  <button class="theme-btn" id="themeToggle" type="button" title="切换深浅色模式" aria-label="切换深浅色模式">🌙</button>
+</header>
 
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-header">目录</div>
+    <nav id="chapterList" aria-label="章节列表"></nav>
+  </aside>
+  <main class="main">
+    <article class="reader" id="reader">
+      <div id="status" class="status">正在加载章节…</div>
+    </article>
+  </main>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var MAX_CHAPTERS = 9999;
+  var chapters = [];
+  var currentIndex = -1;
+
+  var reader = document.getElementById('reader');
+  var statusEl = document.getElementById('status');
+  var chapterListEl = document.getElementById('chapterList');
+  var themeToggle = document.getElementById('themeToggle');
+
+  // ---------- 主题 ----------
+  function getInitialTheme() {
+    var saved = null;
+    try { saved = localStorage.getItem('novel-theme'); } catch (e) { /* ignore */ }
+    if (saved === 'light' || saved === 'dark') return saved;
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
+    try { localStorage.setItem('novel-theme', theme); } catch (e) { /* ignore */ }
+  }
+
+  var currentTheme = getInitialTheme();
+  applyTheme(currentTheme);
+
+  themeToggle.addEventListener('click', function () {
+    currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    applyTheme(currentTheme);
+  });
+
+  // ---------- 工具函数 ----------
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function safeUrl(url) {
+    url = String(url || '').trim();
+    if (/^(https?:|mailto:|tel:)/i.test(url) || /^[^:]+$/.test(url) || url.startsWith('/') || url.startsWith('./') || url.startsWith('../')) {
+      return url;
+    }
+    return '#';
+  }
+
+  function inline(text) {
+    var result = String(text);
+
+    // 行内代码
+    result = result.replace(/`([^`\n]+)`/g, function (_, code) {
+      return '<code>' + code + '</code>';
+    });
+
+    // 图片（先于链接处理）
+    result = result.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, function (_, alt, url) {
+      return '<img src="' + safeUrl(url) + '" alt="' + alt + '" loading="lazy">';
+    });
+
+    // 链接
+    result = result.replace(/\[([^\]]+)\]\(([^)]+)\)/g, function (_, textContent, url) {
+      return '<a href="' + safeUrl(url) + '" target="_blank" rel="noopener">' + textContent + '</a>';
+    });
+
+    // 粗体 / 斜体
+    result = result.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    result = result.replace(/__([^_]+)__/g, '<strong>$1</strong>');
+    result = result.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>');
+    result = result.replace(/(^|[^_])_([^_\n]+)_/g, '$1<em>$2</em>');
+
+    return result;
+  }
+
+  function isHr(line) {
+    return /^([-*_])([ \t]*\1){2,}[ \t]*$/.test(line);
+  }
+
+  function renderMarkdown(md) {
+    var codeBlocks = [];
+    var text = String(md);
+
+    // 先取出围栏代码块，避免被行内解析破坏
+    text = text.replace(/```[ \t]*([\w+-]*)[ \t]*\n([\s\S]*?)```[ \t]*/g, function (_, lang, code) {
+      var idx = codeBlocks.length;
+      codeBlocks.push({
+        lang: lang || '',
+        html: '<pre><code' + (lang ? ' class="language-' + escapeHtml(lang) + '"' : '') + '>' + escapeHtml(code.replace(/\n$/, '')) + '</code></pre>'
+      });
+      return '\u0000CODE' + idx + '\u0000';
+    });
+    text = text.replace(/~~~[ \t]*([\w+-]*)[ \t]*\n([\s\S]*?)~~~[ \t]*/g, function (_, lang, code) {
+      var idx = codeBlocks.length;
+      codeBlocks.push({
+        lang: lang || '',
+        html: '<pre><code' + (lang ? ' class="language-' + escapeHtml(lang) + '"' : '') + '>' + escapeHtml(code.replace(/\n$/, '')) + '</code></pre>'
+      });
+      return '\u0000CODE' + idx + '\u0000';
+    });
+
+    var escaped = escapeHtml(text);
+    var lines = escaped.split('\n');
+    var html = '';
+    var paragraph = [];
+    var listType = null;
+
+    function flushParagraph() {
+      if (paragraph.length) {
+        html += '<p>' + paragraph.map(inline).join('<br>') + '</p>';
+        paragraph = [];
+      }
+    }
+
+    function closeList() {
+      if (listType) {
+        html += '</' + listType + '>';
+        listType = null;
+      }
+    }
+
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i].trim();
+      if (!line) {
+        flushParagraph();
+        closeList();
+        continue;
+      }
+
+      // 代码块占位符
+      var codeMatch = line.match(/^\u0000CODE(\d+)\u0000$/);
+      if (codeMatch) {
+        flushParagraph();
+        closeList();
+        html += codeBlocks[Number(codeMatch[1])].html;
+        continue;
+      }
+
+      // 标题
+      var heading = line.match(/^(#{1,6})\s+(.*)$/);
+      if (heading) {
+        flushParagraph();
+        closeList();
+        var level = heading[1].length;
+        html += '<h' + level + '>' + inline(heading[2]) + '</h' + level + '>';
+        continue;
+      }
+
+      // 分隔线
+      if (isHr(line)) {
+        flushParagraph();
+        closeList();
+        html += '<hr>';
+        continue;
+      }
+
+      // 引用
+      if (line.indexOf('>') === 0) {
+        flushParagraph();
+        closeList();
+        html += '<blockquote><p>' + inline(line.replace(/^>\s?/, '')) + '</p></blockquote>';
+        continue;
+      }
+
+      // 无序列表
+      var ul = line.match(/^[-*+]\s+(.*)$/);
+      if (ul) {
+        flushParagraph();
+        if (listType !== 'ul') {
+          closeList();
+          html += '<ul>';
+          listType = 'ul';
+        }
+        html += '<li>' + inline(ul[1]) + '</li>';
+        continue;
+      }
+
+      // 有序列表
+      var ol = line.match(/^\d+\.\s+(.*)$/);
+      if (ol) {
+        flushParagraph();
+        if (listType !== 'ol') {
+          closeList();
+          html += '<ol>';
+          listType = 'ol';
+        }
+        html += '<li>' + inline(ol[1]) + '</li>';
+        continue;
+      }
+
+      // 普通段落
+      closeList();
+      paragraph.push(line);
+    }
+
+    flushParagraph();
+    closeList();
+
+    // 还原代码块
+    html = html.replace(/\u0000CODE(\d+)\u0000/g, function (_, idx) {
+      return codeBlocks[Number(idx)].html;
+    });
+
+    return html;
+  }
+
+  function extractTitle(md, index) {
+    var lines = String(md || '').split('\n');
+    for (var i = 0; i < lines.length; i++) {
+      var m = lines[i].match(/^\s{0,3}#\s+(.*)$/);
+      if (m) return m[1].trim();
+    }
+    return '第 ' + index + ' 章';
+  }
+
+  // ---------- 章节加载 ----------
+  function showStatus(message) {
+    reader.innerHTML = '<div class="status">' + escapeHtml(message) + '</div>';
+  }
+
+  function showError(message) {
+    reader.innerHTML = '<div class="error-box">' + escapeHtml(message) + '</div>';
+  }
+
+  function renderChapterList() {
+    var html = '<ul class="chapter-list">';
+    for (var i = 0; i < chapters.length; i++) {
+      var ch = chapters[i];
+      var title = extractTitle(ch.text, ch.index);
+      html += '<li>';
+      html += '<button type="button" class="chapter-item" data-index="' + i + '" id="chapter-btn-' + i + '">';
+      html += '<span class="chapter-num">第 ' + ch.index + ' 章</span>';
+      html += '<span class="chapter-name">' + escapeHtml(title) + '</span>';
+      html += '</button>';
+      html += '</li>';
+    }
+    html += '</ul>';
+    chapterListEl.innerHTML = html;
+
+    var buttons = chapterListEl.querySelectorAll('.chapter-item');
+    for (var j = 0; j < buttons.length; j++) {
+      buttons[j].addEventListener('click', function () {
+        var idx = Number(this.getAttribute('data-index'));
+        showChapter(idx);
+      });
+    }
+  }
+
+  function showChapter(index) {
+    if (!chapters[index]) return;
+    currentIndex = index;
+    var ch = chapters[index];
+    var title = extractTitle(ch.text, ch.index);
+
+    var html = '';
+    html += '<h1 class="chapter-title">' + escapeHtml(title) + '</h1>';
+    html += '<div class="chapter-file">' + escapeHtml(ch.file) + '</div>';
+    html += '<div class="markdown-body">' + renderMarkdown(ch.text) + '</div>';
+
+    reader.innerHTML = html;
+
+    var buttons = chapterListEl.querySelectorAll('.chapter-item');
+    for (var i = 0; i < buttons.length; i++) {
+      buttons[i].classList.toggle('active', i === index);
+    }
+
+    // 移动端自动滚回顶部
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.title = title + ' - 小说在线阅读';
+  }
+
+  function isFileProtocol() {
+    return window.location.protocol === 'file:';
+  }
+
+  async function loadChapters() {
+    if (isFileProtocol()) {
+      showError('当前是以 file:// 协议直接打开的网页。\n\n浏览器通常不允许网页通过 fetch 读取本地 Markdown 文件。\n\n请先在该 html 文件夹中启动一个静态服务器，例如：\n\n  python3 -m http.server 8080\n\n然后访问：\n  http://localhost:8080');
+      return;
+    }
+
+    showStatus('正在加载章节…');
+
+    for (var i = 1; i <= MAX_CHAPTERS; i++) {
+      var fileName = i + '.md';
+      var response;
+      try {
+        response = await fetch(fileName, { cache: 'no-store' });
+      } catch (err) {
+        console.error(err);
+        showError('读取 ' + fileName + ' 失败。\n\n请确认已通过本地静态服务器访问本页面，而不是直接双击打开 HTML 文件。\n\n也可以尝试：\n  cd html\n  python3 -m http.server 8080\n然后打开 http://localhost:8080');
+        return;
+      }
+
+      if (response.status === 404) {
+        break;
+      }
+
+      if (!response.ok) {
+        console.error('HTTP ' + response.status + ' for ' + fileName);
+        showError('读取 ' + fileName + ' 时服务器返回了 ' + response.status + '。');
+        return;
+      }
+
+      var text;
+      try {
+        text = await response.text();
+      } catch (err) {
+        console.error(err);
+        showError('解析 ' + fileName + ' 内容失败。');
+        return;
+      }
+
+      chapters.push({
+        index: i,
+        file: fileName,
+        text: text
+      });
+    }
+
+    if (chapters.length === 0) {
+      showError('没有找到 Markdown 章节文件。\n\n请将小说章节命名为 1.md、2.md、3.md … 放在本网页同目录下，然后刷新页面。');
+      return;
+    }
+
+    renderChapterList();
+    // 默认显示第一章；以后可扩展为记住上次阅读位置
+    showChapter(0);
+  }
+
+  loadChapters();
+})();
+</script>
 </body>
 </html>
